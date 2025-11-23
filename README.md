@@ -7,4 +7,4 @@
 <img width="1920" height="1080" alt="Tampilan halaman login Admin" src="https://github.com/user-attachments/assets/9eab8072-c445-454a-b2f0-dae89b208f40" />
 
 #Dashboard Admin
-![Uploading Tampilan halaman dashboard Admin.png…]()
+<img width="1920" height="1080" alt="Tampilan halaman dashboard Admin" src="https://github.com/user-attachments/assets/60987055-96cc-49b1-bf6d-6757d692eb80" />
