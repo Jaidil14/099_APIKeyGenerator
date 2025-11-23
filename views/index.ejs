@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 API Key Generator</h1>
+            <p>Generate your API key in seconds</p>
+        </div>
+
+        <div class="card">
+            <!-- Error Message -->
+            <% if (error) { %>
+                <div class="alert alert-error">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <!-- Form Generate API Key -->
+            <form action="/generate" method="POST" id="generateForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName" 
+                        placeholder="Enter your first name"
+                        value="<%= locals.userData ? userData.firstName : '' %>"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName" 
+                        placeholder="Enter your last name"
+                        value="<%= locals.userData ? userData.lastName : '' %>"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="your.email@example.com"
+                        value="<%= locals.userData ? userData.email : '' %>"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    ⚡ Generate API Key
+                </button>
+            </form>
+
+            <!-- Display Generated API Key -->
+            <% if (apiKey) { %>
+                <div class="api-key-result">
+                    <h3>✅ API Key Generated Successfully!</h3>
+                    <div class="api-key-box">
+                        <code id="apiKeyText"><%= apiKey %></code>
+                        <button type="button" class="btn-copy" onclick="copyApiKey()">
+                            📋 Copy
+                        </button>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Important:</strong> This API key will expire in 1 month. 
+                        Click "Save" button below to save it to the database.
+                    </div>
+
+                    <!-- Form Save to Database -->
+                    <form action="/save" method="POST">
+                        <button type="submit" class="btn btn-success">
+                            💾 Save to Database
+                        </button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="footer">
+            <p>Admin? <a href="/admin/login">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        function copyApiKey() {
+            const apiKeyText = document.getElementById('apiKeyText').innerText;
+            navigator.clipboard.writeText(apiKeyText).then(() => {
+                alert('API Key copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    </script>
+</body>
+</html>
