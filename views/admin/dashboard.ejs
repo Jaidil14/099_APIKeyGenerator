@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div>
+                <h1>📊 Admin Dashboard</h1>
+                <p>Manage all API keys</p>
+            </div>
+            <div class="header-actions">
+                <span class="admin-email">👤 <%= adminEmail %></span>
+                <a href="/admin/logout" class="btn btn-logout">🚪 Logout</a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">🔑</div>
+                <div class="stat-info">
+                    <h3><%= apiKeys.length %></h3>
+                    <p>Total API Keys</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <h3><%= apiKeys.filter(k => k.status === 'Active').length %></h3>
+                    <p>Active Keys</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❌</div>
+                <div class="stat-info">
+                    <h3><%= apiKeys.filter(k => k.status === 'Expired').length %></h3>
+                    <p>Expired Keys</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Keys Table -->
+        <div class="table-container">
+            <h2>All API Keys</h2>
+            
+            <% if (apiKeys.length === 0) { %>
+                <div class="empty-state">
+                    <p>📭 No API keys found</p>
+                </div>
+            <% } else { %>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>API Key</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Expired At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% apiKeys.forEach((key, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><%= key.first_name %> <%= key.last_name %></td>
+                                <td><%= key.email %></td>
+                                <td>
+                                    <code class="api-key-text">
+                                        <%= key.api_key.substring(0, 20) %>...
+                                    </code>
+                                    <button 
+                                        class="btn-mini" 
+                                        onclick="copyToClipboard('<%= key.api_key %>')"
+                                        title="Copy full API key"
+                                    >
+                                        📋
+                                    </button>
+                                </td>
+                                <td>
+                                    <span class="badge badge-<%= key.status.toLowerCase() %>">
+                                        <%= key.status %>
+                                    </span>
+                                </td>
+                                <td><%= new Date(key.created_at).toLocaleDateString('id-ID') %></td>
+                                <td><%= new Date(key.expired_at).toLocaleDateString('id-ID') %></td>
+                                <td>
+                                    <form 
+                                        action="/admin/delete/<%= key.id %>" 
+                                        method="POST" 
+                                        style="display: inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this API key?')"
+                                    >
+                                        <button type="submit" class="btn btn-danger btn-small">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('API Key copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy API key');
+            });
+        }
+    </script>
+</body>
+</html>
